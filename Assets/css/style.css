@@ -1,0 +1,7 @@
+.app-title{
+    text-align: center;
+    padding: 10px;
+    background-image: linear-gradient(to right, darkorchid, darkslateblue, cornflowerblue);
+    color: white;
+    font-weight: 1500;
+}
