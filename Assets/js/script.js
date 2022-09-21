@@ -1,68 +1,63 @@
 
-var cityInputEl = document.querySelector("#city-input")
-var searchBtn = document.querySelector(".searchBtn")
-var cityList = document.querySelector(".city-history-list")
-var resultsContainer = document.querySelector("#weather-container")
+var cityInputEl =$("#city-input")
+var searchBtn = $(".search-button")
+var cityList = $(".city-history-list")
+var resultsContainer = $("#weather-container")
 var apiKey = "a423367b058d27c22f68ab307a3b9726";
-var citySearch = cityInputEl.value.trim()
+
+var currentCity = ""; 
+var lastCity = ""; 
 
 
-searchBtn.addEventListener('submit',formSubmitHandler);
 
-var formSubmitHandler = function(event){
-event.preventDefault();
+var getWeather = (event) => {
+var city = cityInputEl.val();
+currentCity = city; 
 
-
-if (!citySearch){
-    console.error('Please enter a city name!');
-    return;
+var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric" + "&APPID=" + apiKey;
+fetch(apiUrl)
+.then((response) =>{
+if (!response.ok){
+  throw Error(response.statusText);
 }
-var apiUrlCity = "http://api.openweathermap.org/geo/1.0/direct?q=" + citySearch + "&limit=1&appid=" + apiKey;
+return response; 
+})
+.then((response) => {
+    return response.json();
+})
+.then((response) => {
+    // Save city to local storage
+  saveCity(city);
+  cityList.text("");
 
-fetch(apiUrlCity)
-.then((response) => response.json())
-  .then((data) => console.log(data.name));
-}
-// .then(function(response){
-//     console.log(response)
-//     return response.json();
-// })
+  //Create icon for current weather 
+  var currentIcon = "https://openweathermap.org/img/w/" + response.weather[0].icon + ".png";
+  
+  // setting time and timezone with moment js 
+  var currentTimezone = response.timezone;
+  var currentTimezoneHrs = currentTimezone/60/60; 
+  var currentMoment = moment.unix(response.dt).utc().utcOffset(currentTimezoneHrs); 
 
-    // .then(function(data){
-    // console.log(data.name)
-    // });
-//}
-// if (citySearch){
-//     getCityWeather(citySearch); 
+  // render city list 
+  renderCity(); 
 
-//     resultsContainer.textContent = "";
-//     cityInputEl.value = "";
-// }else{
-//     alert("Please enter a city");
-// }
-// }; 
+  //obtain 5 day forecast 
+  getFiveForecast(event);
 
-// // var displayCity = function(){
-// //     var cityBtn = document.createElement("button").addClass("btn btn-secondary btn-lg"); 
-// //     cityList.append(cityBtn); 
-// //     cityBtn.textContent = citySearch
-// //     }
+  //Weather results display for searched cities 
+  var currentWeather = `
+  <h3> ${response.name} ${currentMoment.format("(DD/MM/YYYY)")}<img src="${currentIcon}"></h3>
+  <ul class= "weatherList">
+  <li>Temperature: ${response.main.temp}&#8451;</li>
+  <li>Humidity:${response.main.humidity}%</li>
+  <li>Wind Speed:${response.wind.speed}m/s</li>
+  <li id="uvIndex">UV Index:</li>
+  </ul> `; 
+//Appedning the display to html
+  $("#current-weather").HTML(currentWeather);
 
-
-
-// // var getCityWeather = function(name){
-// var apiUrlCity = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityInputEl + "&limit=1&appid=" + apiKey;
-
-// fetch(apiUrlCity)
-// .then(function(response){
-//     console.log(response)
-//     return response.json();
-// })
-
-//     .then(function(data){
-//     console.log(data.name)
-//     });
-
+})
+};
 
 
 
@@ -74,7 +69,7 @@ fetch(apiUrlCity)
 //the wind speed
 //the UV index
 
-//color that indicates whether the conditions are favorable, moderate, or severe
+//color that indicates whether the uv index conditions are favorable, moderate, or severe
 
 
 //5-day forecast that displays 
@@ -83,4 +78,3 @@ fetch(apiUrlCity)
 //the temperature, 
 //the wind speed
 //the humidity
-
