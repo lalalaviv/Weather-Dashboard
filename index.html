@@ -24,12 +24,14 @@
               <h2 class="card-header text-uppercase">Search for a City:</h2>
               <form id="city-form" class="card-body">
                 <input name="city-input" id="city-input" type="text" class="form-input" placeholder="Melbourne" />
-                <input class="btn-primary search-button" type="submit" value="Search">
+                <button type="button" class="btn btn-primary search-button">Search</button>
               </form>
+              <button type="button" class="btn btn-outline-info" id = "clear-storage">CLEAR</button>
             </div>
+        
 
             <div class="card">
-                <h3 class="card-header text-uppercase">Searched history:</h3>
+                <h3 class="card-header text-uppercase">Searched cities:</h3>
             <div class="city-history-list"> </div>
             </div>
 
@@ -42,23 +44,9 @@
           </div>
 
           <div class = "row">
-            <div class ="col-md-12" id = "5-day-forecast"></div>
-                  <div class="card-deck col s12 m">
-                      <div id="day1">  
-                      </div>
-  
-                      <div id="day2">   
-                      </div>
-  
-                      <div id="day3">  
-                      </div>
-  
-                      <div id="day4">
-                      </div>
-  
-                      <div id="day5"> 
-                      </div>
-                      </div>
+            <div class ="d-inline-flex flex-wrap" id = "5-day-forecast">
+            <h3> 5-Day Forecast</h3>
+            </div>
                     
                   </div>
               </div>
