@@ -15,7 +15,6 @@ var getWeather = (event) => {
   currentCity = city;
 
   var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric" +"&appid=" + apiKey;
-  console.log(apiUrl);
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -30,6 +29,7 @@ var getWeather = (event) => {
       // Save city to local storage
       saveCity(city);
       cityList.text("");
+      $("#current-weather").html("");
 
       //Create icon for current weather 
       var currentIcon = "https://openweathermap.org/img/w/" + response.weather[0].icon + ".png";
@@ -45,7 +45,7 @@ var getWeather = (event) => {
       //obtain 5 day forecast 
       getFiveDayForecast(event);
 
-      //Weather results display for searched cities 
+      //template for Weather results display for searched cities 
       //city name,
       //the date, 
       //an icon representation of weather conditions, 
@@ -71,6 +71,7 @@ var getFiveDayForecast = (event) => {
 
   fetch(fivedayUrl)
     .then((response) => {
+      $("#5-day-forecast").html("");
       if (!response.ok) {
         alert ('Error' + response.statusText);
       }
@@ -81,10 +82,12 @@ var getFiveDayForecast = (event) => {
     })
 
     .then((response) => {
+      
+
      var fiveDayWeather = `
      <h3>5-Day Forecast:</h3>
      <div id="fiveDayForecast" class="d-inline-flex flex-wrap">`;
-     
+     //loopiing 5 day forecast
       for (let i = 0; i < response.list.length; i++) {
         var cityData = response.list[i];
         var dayTime = cityData.dt;
@@ -94,28 +97,30 @@ var getFiveDayForecast = (event) => {
         var iconUrl = "https://openweathermap.org/img/w/" + cityData.weather[0].icon + ".png";
 
         //setting time to display as mid-day
-        if (cityMoment.format("HH:mm:ss") === "11:00:00" || cityMoment.format("HH:mm:ss") === "12:00:00" || cityMoment.format("HH:mm:ss") === "13:00:00") {
+        if (cityMoment.format("HH:mm:ss") === "11:00:00" || cityMoment.format("HH:mm:ss") === "12:00:00" || cityMoment.format("HH:mm:ss") === "13:00:00"){
 
-          //5-day forecast that displays 
+          //template for 5-day forecast that displays 
           //the date, 
           //an icon representation of weather conditions, 
           //the temperature, 
           //the wind speed
           //the humidity
-          var fiveDayWeather = `
+          fiveDayWeather += `
         <div class = "weather-card card m-2 p0">
-        <ul class = "weatherList p-3">
+        <ul class = "weatherList p-3 bg-dark text-white">
         <li>${cityMoment.format("DD/MM/YYYY")}</li>
-        <li class= "weather-icon"> <img scr= "${iconUrl}"></li>
-        <li> Temperature:${response.main.temp}&#8451;</li>
-        <li>Humidity:${response.main.humidity}%</li>
-        <li>Wind Speed:${response.wind.speed}m/s</li>
+        <li class= "weather-icon"> <img src= "${iconUrl}"></li>
+        <li>Temperature: ${cityData.main.temp}&#8451;</li>
+        <li>Wind Speed: ${cityData.wind.speed}m/s</li>
+        <li>Humidity: ${cityData.main.humidity}%</li>
         </ul>
         </div>`;
+
         }
       }
-
+      fiveDayWeather += `</div>`
       $("#5-day-forecast").append(fiveDayWeather);
+      
     })
 }
 
@@ -155,7 +160,7 @@ var renderCity = () => {
 
     //append sotred cities to page 
     for (let i = 0; i < localStorage.length; i++) {
-      var city = localStorage.getItem("citiies" + i);
+      var city = localStorage.getItem("cities" + i);
       var cityEl;
 
       // set to lastCity if currentCity not set 

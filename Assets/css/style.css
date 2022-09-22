@@ -5,3 +5,7 @@
     color: white;
     font-weight: 1500;
 }
+
+.weatherList {
+    list-style: none;
+}
