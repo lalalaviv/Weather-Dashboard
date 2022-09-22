@@ -59,7 +59,7 @@ var getWeather = (event) => {
   <li>Humidity: ${response.main.humidity}%</li>
   <li>Wind Speed: ${response.wind.speed}m/s</li>
   </ul> `;
-      //Appedning the display to html
+      //Appending the display to html
       $("#current-weather").append(currentWeather);
 
     })
